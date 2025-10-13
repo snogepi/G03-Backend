@@ -6,7 +6,14 @@ const studentSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    name: {
+    firstName: {
+        type: String,
+        required: true
+    },
+    middleName: {
+        type: String
+    },
+    lastName: {
         type: String,
         required: true
     },
@@ -27,8 +34,8 @@ const studentSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["enrolled", "not enrolled"],
-        default: "active"
+        enum: ["Enrolled", "Unenrolled", "Graduated", "On Leave (LOA)"],
+        default: "Enrolled"
     },
     rfid_tag: {
         type: String
@@ -41,7 +48,14 @@ const staffSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    name: {
+    firstName: {
+        type: String,
+        required: true
+    },
+    middleName: {
+        type: String
+    },
+    lastName: {
         type: String,
         required: true
     },

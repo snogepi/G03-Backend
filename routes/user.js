@@ -1,12 +1,27 @@
 import express from 'express';
 
-import { studentRegister } from '../controllers/user.js'
+import { staffRegister, studentRegister, staffLogin, studentLogin } from '../controllers/user.js'
 
 const router = express.Router()
 
 router.post('/studentregistration', async (req, res) => {
     const isAdded = await studentRegister(req.body)
     res.json({ isAdded })
+})
+
+router.post('/staffregistration', async (req, res) => {
+    const isAdded = await staffRegister(req.body)
+    res.json({ isAdded })
+})
+
+router.post('/studentlogin', async (req, res) => {
+    const result = await studentLogin(req.body)
+    res.json(result)
+})
+
+router.post('/stafflogin', async (req, res) => {
+    const result = await staffLogin(req.body)
+    res.json(result)
 })
 
 router.get('/:id', (req, res) => {
