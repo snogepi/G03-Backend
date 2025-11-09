@@ -2,11 +2,13 @@ import 'dotenv/config';
 import express from 'express'
 import mongoose from 'mongoose'
 import { userRoutes } from './routes/user.js'
+import { requestRoutes } from './routes/request.js';
 
 const app = express();
 
 app.use(express.json());
 app.use('/user', userRoutes)
+app.use('/api/requests', requestRoutes)
 
 mongoose.connect(process.env.MONGODB_URL)
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atlas.'))

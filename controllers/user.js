@@ -1,14 +1,18 @@
 import { StudentModel } from '../models/user.js'
 import { StaffModel } from '../models/user.js'
+import bcrypt from 'bcrypt'
 
 export async function studentRegister(body) {
+    const hashedPassword = await bcrypt.hash(body.password, 10)
+
     let newStudentUser = new StudentModel({
-        student_num: body.student_num,
+        student_number: body.student_number,
         firstName: body.firstName,
         middleName: body.middleName,
         lastName: body.lastName,
+        extensions: body.extensions,
         email: body.email,
-        password: body.password,
+        password: hashedPassword,
         program: body.program,
         year_level: body.year_level,
         status: body.status
@@ -20,11 +24,16 @@ export async function studentRegister(body) {
 }
 
 export async function staffRegister(body) {
+    const hashedPassword = await bcrypt.hash(body.password, 10)
+
     let newStaffUser = new StaffModel({
-        staff_num: body.staff_num,
-        name: body.name,
+        employee_number: body.employee_number,
+        firstName: body.firstName,
+        middleName: body.middleName,
+        lastName: body.lastName,
+        extensions: body.extensions,
         email: body.email,
-        password: body.password
+        password: hashedPassword
     })
 
     return newStaffUser.save().then((user, error) => {
@@ -42,7 +51,7 @@ export async function studentLogin(body) {
             return { success: false, message: 'Student not found.'}
         }
 
-        if (user.password !== password) {
+        if (!bcrypt.compare(password, user.password)) {
             return { success: false, message: 'Incorrect password.'}
         }
 
@@ -52,7 +61,7 @@ export async function studentLogin(body) {
             user: {
                 id: user._id,
                 email: user.email,
-                student_id: user.student_num
+                student_id: user.student_number
             }
         }
     } catch (error) {
@@ -81,7 +90,7 @@ export async function staffLogin(body) {
             user: {
                 id: user._id,
                 email: user.email,
-                staff_id: user.staff_num
+                staff_id: user.employee_number
             }
         }
     } catch (error) {

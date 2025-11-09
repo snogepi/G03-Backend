@@ -1,7 +1,15 @@
+// import mongoose
 import mongoose, { mongo } from "mongoose"
 
+// create schema?
+// const schemaName = new monggose.Schema({ fieldName: { type: String example lang } })
 const studentSchema = new mongoose.Schema({
-    student_num: {
+    rfid_tag: {
+        type: String,
+        unique: true,
+        default: null
+    },
+    student_number: {
         type: String,
         required: true,
         unique: true
@@ -11,11 +19,16 @@ const studentSchema = new mongoose.Schema({
         required: true
     },
     middleName: {
-        type: String
+        type: String,
+        default: null
     },
     lastName: {
         type: String,
         required: true
+    },
+    extensions: {
+        type: String,
+        default: null
     },
     email: {
         type: String,
@@ -28,22 +41,26 @@ const studentSchema = new mongoose.Schema({
     },
     program: {
         type: String,
+        default: null
     },
     year_level: {
         type: String,
+        default: null
     },
     status: {
         type: String,
         enum: ["Enrolled", "Unenrolled", "Graduated", "On Leave (LOA)"],
         default: "Enrolled"
-    },
-    rfid_tag: {
-        type: String
     }
 })
 
 const staffSchema = new mongoose.Schema({
-    staff_num: {
+    rfid_tag: {
+        type: String,
+        unique: true,
+        default: null
+    },
+    employee_number: {
         type: String,
         required: true,
         unique: true
@@ -53,11 +70,16 @@ const staffSchema = new mongoose.Schema({
         required: true
     },
     middleName: {
-        type: String
+        type: String,
+        default: null
     },
     lastName: {
         type: String,
         required: true
+    },
+    extensions: {
+        type: String,
+        default: null
     },
     email: {
         type: String,
