@@ -9,10 +9,6 @@ const documentSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    processing_time: {
-        type: Number,
-        required: true
-    },
     fee: {
         type: Number,
         required: true,

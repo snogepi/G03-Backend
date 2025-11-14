@@ -31,7 +31,11 @@ const requestSchema = new mongoose.Schema({
     payment_verified_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Staff',
-        required: true
+        default: null
+    },
+    processing_time: {
+        type: Number,
+        default: null
     },
     status: {
         type: String,
