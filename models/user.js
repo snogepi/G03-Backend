@@ -14,15 +14,15 @@ const studentSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    firstName: {
+    first_name: {
         type: String,
         required: true
     },
-    middleName: {
+    middle_name: {
         type: String,
         default: null
     },
-    lastName: {
+    last_name: {
         type: String,
         required: true
     },
@@ -65,15 +65,15 @@ const staffSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    firstName: {
+    first_name: {
         type: String,
         required: true
     },
-    middleName: {
+    middle_name: {
         type: String,
         default: null
     },
-    lastName: {
+    last_name: {
         type: String,
         required: true
     },

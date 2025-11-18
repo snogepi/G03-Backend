@@ -1,5 +1,6 @@
 // import mongoose
 import mongoose, { mongo } from "mongoose";
+import { DocumentModel } from "./document.js";
 
 // create schema?
 // const schemaName = new monggose.Schema({ fieldName: { type: String example lang } })
@@ -42,11 +43,18 @@ const requestSchema = new mongoose.Schema({
         enum: ['PENDING (Clearance)', 'PENDING (Payment)', 'PREPARING', 'FOR PICKUP', 'CLAIMED'],
         default: 'PENDING (Clearance)'
     },
+    remarks: {
+        type: String,
+        default: null
+    },
     release_date: {
         type: Date,
         default: null
     }
 })
+
+// not yet approved!
+// requestSchema.index({ request_date: 1 }, { expireAfterSeconds: 2592000 })
 
 // export const className = mongoose.model('collectionName', instance)
 export const RequestModel = mongoose.model('Request', requestSchema)

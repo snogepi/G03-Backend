@@ -1,15 +1,17 @@
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+
 import { StudentModel } from '../models/user.js'
 import { StaffModel } from '../models/user.js'
-import bcrypt from 'bcrypt'
 
 export async function studentRegister(body) {
     const hashedPassword = await bcrypt.hash(body.password, 10)
 
     let newStudentUser = new StudentModel({
         student_number: body.student_number,
-        firstName: body.firstName,
-        middleName: body.middleName,
-        lastName: body.lastName,
+        first_name: body.first_name,
+        middle_name: body.middle_name,
+        last_name: body.last_name,
         extensions: body.extensions,
         email: body.email,
         password: hashedPassword,
@@ -18,9 +20,17 @@ export async function studentRegister(body) {
         status: body.status
     })
 
-    return newStudentUser.save().then((user, error) => {
-        return !(error)
-    })
+    try {
+        await newStudentUser.save()
+        return { success: true }
+    }
+
+    catch(error) {
+        return {
+            success: false,
+            message: error.message
+        }
+    }
 }
 
 export async function staffRegister(body) {
@@ -28,17 +38,25 @@ export async function staffRegister(body) {
 
     let newStaffUser = new StaffModel({
         employee_number: body.employee_number,
-        firstName: body.firstName,
-        middleName: body.middleName,
-        lastName: body.lastName,
+        first_name: body.first_name,
+        middle_name: body.middle_name,
+        last_name: body.last_name,
         extensions: body.extensions,
         email: body.email,
         password: hashedPassword
     })
 
-    return newStaffUser.save().then((user, error) => {
-        return !(error)
-    })
+    try {
+        await newStaffUser.save()
+        return { success: true }
+    }
+
+    catch(error) {
+        return {
+            success: false,
+            message: error.message
+        }
+    }
 }
 
 export async function studentLogin(body) {
@@ -51,17 +69,28 @@ export async function studentLogin(body) {
             return { success: false, message: 'Student not found.'}
         }
 
-        if (!bcrypt.compare(password, user.password)) {
+        if (!(await bcrypt.compare(password, user.password))) {
             return { success: false, message: 'Incorrect password.'}
         }
+
+        const token = jwt.sign(
+            {
+                id: user._id,
+                role: "Student"
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        )
 
         return {
             success: true,
             message: 'Login successful.',
+            token,
             user: {
                 id: user._id,
                 email: user.email,
-                student_id: user.student_number
+                student_id: user.student_number,
+                role: "Student"
             }
         }
     } catch (error) {
@@ -80,17 +109,28 @@ export async function staffLogin(body) {
             return { success: false, message: 'Staff not found.'}
         }
 
-        if (user.password !== password) {
+        if (!(await bcrypt.compare(password, user.password))) {
             return { success: false, message: 'Incorrect password.'}
         }
+
+        const token = jwt.sign(
+            {
+                id: user._id,
+                role: "Staff"
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        )
 
         return {
             success: true,
             message: 'Login successful.',
+            token,
             user: {
                 id: user._id,
                 email: user.email,
-                staff_id: user.employee_number
+                staff_id: user.employee_number,
+                role: "Staff"
             }
         }
     } catch (error) {

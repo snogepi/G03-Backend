@@ -1,17 +1,31 @@
 import express from 'express'
-import { createRequest, viewRequests, updateRequest } from '../controllers/request.js'
+import { auth } from '../middleware/auth.js' 
+
+import { createRequest, viewRequest, viewRequests, updateRequest, deleteRequest } from '../controllers/request.js'
 
 const router = express.Router();
 
-//router.post('/', createRequest)
+// ---------------------------------
+// STUDENT
+// ---------------------------------
 
-router.post('/createrequest', async(req, res) => {
+router.post('/createrequest', auth, async(req, res) => { // working!
     const isAdded = await createRequest(req.body)
     res.json({ isAdded })
 })
 
-router.get('/viewrequests', viewRequests)
+router.get('/viewrequest/:id', auth, viewRequest)
 
-router.put('/:id/staff', updateRequest)
+// ---------------------------------
+// STAFF
+// ---------------------------------
+
+router.get('/viewrequests', auth, viewRequests) // working!
+
+router.put('/updaterequest/:id', auth, updateRequest) // working!
+
+router.delete('/deleterequest/:id', auth, deleteRequest) // working!
+
+// router.put('/exportrequests', exportRequests)
 
 export { router as requestRoutes }
