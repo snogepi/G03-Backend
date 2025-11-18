@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { staffRegister, studentRegister, staffLogin, studentLogin } from '../controllers/user.js'
+import { forgotPassword, resetPassword } from '../controllers/password.js';
 
 const router = express.Router()
 
@@ -23,6 +24,10 @@ router.post('/stafflogin', async (req, res) => {
     const result = await staffLogin(req.body)
     res.json(result)
 })
+
+router.post('/forgotpassword', forgotPassword);
+
+router.post('/resetpassword', resetPassword);
 
 router.get('/:id', (req, res) => {
     res.json({ message: 'Pending GET /user implementation' })

@@ -1,5 +1,5 @@
 import express from 'express'
-import auth from '../middleware/auth.js'
+import { auth } from '../middleware/auth.js'
 import { scanRFID } from '../controllers/rfid-log.js'
 import { RFIDLogModel } from '../models/rfid-log.js'
 

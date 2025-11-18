@@ -7,38 +7,14 @@ import { createNotification } from "./notification.js";
 // ---------------------------------
 
 // new req
-export async function createRequest(body) { // working!
-    const { student_id, doc_type_id, purpose, request_date } = body
-
-    try {
-        const newRequest = new RequestModel({
-            student_id: body.student_id,
-            doc_type_id: body.doc_type_id,
-            purpose: body.purpose,
-            request_date: body.request_date
-        })
-
-        await newRequest.save()
-
-        const newClearance = new ClearanceModel({
-            request_id: newRequest._id,
-            student_id
-        })
-
-        await newClearance.save()
-
-        return {
-            success: true,
-            message: 'Request submitted successfully. Clearance is pending verification.',
-            request: newRequest
-        }
-    } catch (error) {
-        console.error('Failed to create request.', error)
-        return {
-            success: false, 
-            message: 'Server error during request submission. Please try again later.' 
-        }
-    }
+export async function createRequest(body) {
+  try {
+    const request = new RequestModel(body);
+    const saved = await request.save();
+    return saved;   // MUST return the full object including _id
+  } catch (err) {
+    return null;
+  }
 }
 
 export async function viewRequest(req, res) { // working!
@@ -68,6 +44,32 @@ export async function viewRequest(req, res) { // working!
             success: false,
             message: "Server error while fetching request."
         })
+    }
+}
+
+export async function viewMyRequests(req, res) {
+    try {
+        if (req.user.role !== "student") {
+            return res.status(403).json({
+                success: false,
+                message: "Only students can view their own requests."
+            });
+        }
+
+        const requests = await RequestModel.find({ student_id: req.user.id })
+            .populate("doc_type_id") // if you want document details
+            .sort({ request_date: -1 });
+
+        res.status(200).json({
+            success: true,
+            requests
+        });
+    } catch (error) {
+        console.error("Failed to fetch student's requests:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while fetching requests."
+        });
     }
 }
 

@@ -5,6 +5,7 @@ import { StudentModel } from '../models/user.js'
 import { StaffModel } from '../models/user.js'
 
 export async function studentRegister(body) {
+    console.log('Received body:', body);
     const hashedPassword = await bcrypt.hash(body.password, 10)
 
     let newStudentUser = new StudentModel({
@@ -60,10 +61,12 @@ export async function staffRegister(body) {
 }
 
 export async function studentLogin(body) {
-    const { email, password } = body;
+    console.log("Login body received:", body);
+
+    const { student_number, password } = body;
 
     try {
-        const user = await StudentModel.findOne({ email })
+        const user = await StudentModel.findOne({ student_number })
 
         if (!user) {
             return { success: false, message: 'Student not found.'}
@@ -100,10 +103,10 @@ export async function studentLogin(body) {
 }
 
 export async function staffLogin(body) {
-    const { email, password } = body;
+    const { employee_number, password } = body;
 
     try {
-        const user = await StaffModel.findOne({ email })
+        const user = await StaffModel.findOne({ employee_number })
 
         if (!user) {
             return { success: false, message: 'Staff not found.'}

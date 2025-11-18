@@ -1,7 +1,7 @@
 import express from 'express'
 import { auth } from '../middleware/auth.js' 
 
-import { createRequest, viewRequest, viewRequests, updateRequest, deleteRequest } from '../controllers/request.js'
+import { createRequest, viewRequest, viewMyRequests, viewRequests, updateRequest, deleteRequest } from '../controllers/request.js'
 
 const router = express.Router();
 
@@ -9,12 +9,18 @@ const router = express.Router();
 // STUDENT
 // ---------------------------------
 
-router.post('/createrequest', auth, async(req, res) => { // working!
-    const isAdded = await createRequest(req.body)
-    res.json({ isAdded })
+router.post('/createrequest', async(req, res) => { // working!
+    const newRequest = await createRequest(req.body);
+    res.json({
+        isAdded: {
+            request: newRequest
+        }
+    });
 })
 
 router.get('/viewrequest/:id', auth, viewRequest)
+
+router.get('/mine', auth, viewMyRequests)
 
 // ---------------------------------
 // STAFF

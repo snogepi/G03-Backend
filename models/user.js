@@ -5,9 +5,9 @@ import mongoose, { mongo } from "mongoose"
 // const schemaName = new monggose.Schema({ fieldName: { type: String example lang } })
 const studentSchema = new mongoose.Schema({
     rfid_tag: {
-        type: String,
-        unique: true,
-        default: null
+        type: String//,
+ //       sparse: true,
+   //     default: null
     },
     student_number: {
         type: String,
@@ -51,6 +51,14 @@ const studentSchema = new mongoose.Schema({
         type: String,
         enum: ["Enrolled", "Unenrolled", "Graduated", "On Leave (LOA)"],
         default: "Enrolled"
+    },
+    reset_token: {
+        type: String,
+        default: null
+    },
+    reset_token_expiry: {
+        type: Date,
+        default: null
     }
 })
 
@@ -89,6 +97,14 @@ const staffSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    reset_token: {
+        type: String,
+        default: null
+    },
+    reset_token_expiry: {
+        type: Date,
+        default: null
     }
 })
 
