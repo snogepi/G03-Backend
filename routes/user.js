@@ -29,9 +29,15 @@ router.post('/forgotpassword', forgotPassword);
 
 router.post('/resetpassword', resetPassword);
 
-router.get('/:id', (req, res) => {
-    res.json({ message: 'Pending GET /user implementation' })
-})
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const user = await StudentModel.findById(req.params.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
 
 router.put('/:id', (req, res) => {
     res.json({ message: 'Pending PUT /user implementation' })
