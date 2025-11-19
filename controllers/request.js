@@ -9,11 +9,16 @@ import { createNotification } from "./notification.js";
 // new req
 export async function createRequest(body) {
   try {
+    if (!body.student_id || !body.documents || body.documents.length === 0 || !body.purpose || !body.contact_number || !body.last_sem_attended || !body.semester || body.total_amount == null) {
+        throw new Error("Missing required fields.")
+    }
+
     const request = new RequestModel(body);
     const saved = await request.save();
-    return saved;   // MUST return the full object including _id
+    return saved;   
   } catch (err) {
-    return null;
+    console.error("Error creating request:", err)
+    throw err;
   }
 }
 
@@ -110,7 +115,7 @@ export async function updateRequest (req, res) { // working!
         const updateData = {}
 
         if (status) updateData.status = status;
-        if (remarks) updateData.remarks = remarks;
+        if (remarks !== undefined) updateData.remarks = remarks;
         if (processing_time !== undefined) updateData.processing_time = processing_time;
         if (release_date !== undefined) updateData.release_date = release_date;
         if (proof_of_payment !== undefined) updateData.proof_of_payment = proof_of_payment;
@@ -194,20 +199,11 @@ export async function deleteRequest(req, res) {
             });
         }
 
-        if (req.user.role === "student") {
-            if (request.status !== "CLAIMED") {
-                return res.status(403).json({
-                    success: false,
-                    message: "Students can only delete completed requests."
-                });
-            }
-
-            if (request.student_id.toString() !== req.user.id) {
-                return res.status(403).json({
-                    success: false,
-                    message: "You can only delete your own requests."
-                });
-            }
+        if (request.student_id.toString() !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only delete your own requests."
+            })
         }
 
         await RequestModel.findByIdAndDelete(id)

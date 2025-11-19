@@ -10,15 +10,36 @@ const requestSchema = new mongoose.Schema({
         ref: 'Student',
         required: true
     },
-    doc_type_id: [
+    documents: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Document',
-            required: true
+            name: { type: String, required: true },
+            copies: { type: Number, default: 1 },
+            remarks: { type: String, default: "" },
+            price: { type: Number, required: true }
         }
     ],
     purpose: {
         type: String,
+        required: true
+    },
+    contact_number: {
+        type: String,
+        required: true
+    },
+    last_sem_attended: {
+        type: String,
+        required: true
+    },
+    semester: {
+        type: String,
+        required: true
+    },
+    date_graduated: {
+        type: String,
+        default: null
+    }, 
+    total_amount: {
+        type: Number,
         required: true
     },
     request_date: {
@@ -52,9 +73,6 @@ const requestSchema = new mongoose.Schema({
         default: null
     }
 })
-
-// not yet approved!
-// requestSchema.index({ request_date: 1 }, { expireAfterSeconds: 2592000 })
 
 // export const className = mongoose.model('collectionName', instance)
 export const RequestModel = mongoose.model('Request', requestSchema)
