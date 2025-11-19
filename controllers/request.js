@@ -28,7 +28,6 @@ export async function viewRequest(req, res) { // working!
 
         const request = await RequestModel.findById(id)
             .populate("student_id")
-            .populate("doc_type_id")
         
         if (!request) {
             return res.status(404).json({
@@ -61,7 +60,6 @@ export async function viewMyRequests(req, res) {
             });
         }
         const requests = await RequestModel.find({ student_id: req.user.id })
-            .populate("doc_type_id")
             .sort({ request_date: -1 });
         res.status(200).json({
             success: true,
