@@ -49,20 +49,18 @@ export async function viewRequest(req, res) { // working!
 
 export async function viewMyRequests(req, res) {
     try {
-        if (req.user.role !== "student") {
+        if (req.user.role !== "Student") {
             return res.status(403).json({
                 success: false,
                 message: "Only students can view their own requests."
             });
         }
-
         const requests = await RequestModel.find({ student_id: req.user.id })
-            .populate("doc_type_id") // if you want document details
+            .populate("doc_type_id")
             .sort({ request_date: -1 });
-
         res.status(200).json({
             success: true,
-            requests
+            requests: requests || []
         });
     } catch (error) {
         console.error("Failed to fetch student's requests:", error);

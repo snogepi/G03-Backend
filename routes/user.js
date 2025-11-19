@@ -30,12 +30,40 @@ router.post('/forgotpassword', forgotPassword);
 
 router.post('/resetpassword', resetPassword);
 
+// Replace this:
 router.get('/:id', auth, async (req, res) => {
   try {
     const user = await StudentModel.findById(req.params.id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
     res.json({ success: true, user });
   } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// With this:
+router.get('/:id', auth, async (req, res) => {
+  try {
+    // Add security check: Only allow students to view their own data
+    if (req.user.role !== 'Student' || req.params.id !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Unauthorized access' });
+    }
+
+    const user = await StudentModel.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        student_number: user.student_number,
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching user:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
