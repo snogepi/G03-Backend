@@ -3,6 +3,7 @@ import express from 'express';
 import { auth } from '../middleware/auth.js';
 import { staffRegister, studentRegister, staffLogin, studentLogin } from '../controllers/user.js'
 import { forgotPassword, resetPassword } from '../controllers/password.js';
+import { StudentModel } from '../models/user.js';
 
 const router = express.Router()
 
