@@ -11,8 +11,8 @@
     "mongoose": "^8.19.1",
     "nodemailer": "^7.0.10",
     "xss-clean": "^0.1.4"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
-},
-"scripts": {
-  "start": "node index.js"
 }
