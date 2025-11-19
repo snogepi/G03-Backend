@@ -33,7 +33,6 @@ router.post('/resetpassword', resetPassword);
 
 router.get('/:id', auth, async (req, res) => {
   try {
-    // Add security check: Only allow students to view their own data
     if (req.user.role !== 'Student' || req.params.id.toString() !== req.user.id.toString()) {
       return res.status(403).json({ success: false, message: 'Unauthorized access' });
     }

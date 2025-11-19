@@ -78,7 +78,7 @@ export async function studentLogin(body) {
 
         const token = jwt.sign(
             {
-                id: user._id.toString(),
+                id: user._id,
                 role: "Student"
             },
             process.env.JWT_SECRET,
