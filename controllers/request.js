@@ -86,7 +86,6 @@ export async function viewRequests(req, res) { // working!
     try {
         const requests = await RequestModel.find()
             .populate('student_id')
-            .populate('doc_type_id')
         
         res.status(200).json({ success: true, requests} ) 
     } catch (error) {
