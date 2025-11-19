@@ -92,7 +92,7 @@ export async function studentLogin(body) {
             user: {
                 id: user._id,
                 email: user.email,
-                student_id: user.student_number,
+                student_number: user.student_number,
                 role: "Student"
             }
         }
