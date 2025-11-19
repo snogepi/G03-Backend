@@ -46,6 +46,7 @@ router.get('/:id', auth, async (req, res) => {
     res.json({
       success: true,
       user: {
+        id: user._id,
         first_name: user.first_name,
         last_name: user.last_name,
         student_number: user.student_number,
