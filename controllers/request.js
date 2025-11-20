@@ -74,6 +74,58 @@ export async function viewMyRequests(req, res) {
     }
 }
 
+export async function updateMyRequest(req, res) {
+    try {
+        const { id } = req.params
+
+        const request = await RequestModel.findById(id);
+        if (!request) {
+            return res.status(404).json({
+                success: false,
+                message: "Request not found"
+            })
+        }
+
+        if (request.student_id.toString() !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only update your own requests."
+            })
+        }
+
+        if (request.status !== "PENDING (Clearance)" && request.status !== "PENDING (Payment)") {
+            return res.status(400).json({
+                success: false,
+                message: "Cannot update request after payment. Please submit a new request."
+            })
+        }
+
+        const { documents, purpose, contact_number, last_sem_attended, semester, total_amount } = req.body
+
+        const updateData = {}
+
+        if (documents !== undefined) updateData.documents = documents;
+        if (purpose !== undefined) updateData.purpose = purpose;
+        if (contact_number !== undefined) updateData.contact_number = contact_number;
+        if (last_sem_attended !== undefined) updateData.last_sem_attended = last_sem_attended;
+        if (semester !== undefined) updateData.semester = semester;
+        if (total_amount !== undefined) updateData.total_amount = total_amount;
+
+        const updatedRequest = await RequestModel.findByIdAndUpdate(id, updateData, { new: true })
+        res.status(200).json({
+            success: true,
+            message: "Request updated successfully.",
+            request: updatedRequest
+        })
+    } catch (error) {
+        console.error("Failed to update request:", error)
+        res.status(500).json({
+            success: false,
+            message: "Server error during update."
+        })
+    }
+}
+
 // ---------------------------------
 // STAFF
 // ---------------------------------

@@ -1,7 +1,7 @@
 import express from 'express'
 import { auth } from '../middleware/auth.js' 
 
-import { createRequest, viewRequest, viewMyRequests, viewRequests, updateRequest, deleteRequest } from '../controllers/request.js'
+import { createRequest, viewRequest, viewMyRequests, viewRequests, updateMyRequest, updateRequest, deleteRequest } from '../controllers/request.js'
 
 const router = express.Router();
 
@@ -21,6 +21,8 @@ router.post('/createrequest', async(req, res) => { // working!
 router.get('/viewrequest/:id', auth, viewRequest)
 
 router.get('/mine', auth, viewMyRequests)
+
+router.put('/updatemyrequest/:id', auth, updateMyRequest)
 
 // ---------------------------------
 // STAFF
