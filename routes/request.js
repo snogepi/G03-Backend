@@ -20,7 +20,7 @@ router.post('/createrequest', async(req, res) => { // working!
 
 router.get('/viewrequest/:id', auth, viewRequest)
 
-router.get('/mine', auth, viewMyRequests)
+router.get('/:id', auth, viewMyRequests)
 
 router.put('/updatemyrequest/:id', auth, updateMyRequest)
 

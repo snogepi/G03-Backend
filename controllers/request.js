@@ -53,13 +53,15 @@ export async function viewRequest(req, res) { // working!
 
 export async function viewMyRequests(req, res) {
     try {
-        if (req.user.role !== "Student") {
+        const { studentId } = req.params;
+        if (studentId !== req.user.id) {
             return res.status(403).json({
                 success: false,
-                message: "Only students can view their own requests."
+                message: "You can only view your own requests."
             });
         }
-        const requests = await RequestModel.find({ student_id: req.user.id })
+
+        const requests = await RequestModel.find({ student_id: studentId })
             .sort({ request_date: -1 });
         res.status(200).json({
             success: true,
