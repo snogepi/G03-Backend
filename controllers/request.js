@@ -53,8 +53,9 @@ export async function viewRequest(req, res) { // working!
 
 export async function viewMyRequests(req, res) {
     try {
-        const { studentId } = req.params;
-        if (req.user.role === "Student" && req.params.id !== req.user.id.toString()) {
+        const studentId = req.params.id;
+
+        if (req.user.role === "Student" && studentId !== req.user.id.toString()) {
             return res.status(403).json({
                 success: false,
                 message: "You can only view your own requests."
