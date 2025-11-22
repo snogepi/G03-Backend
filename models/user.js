@@ -64,9 +64,9 @@ const studentSchema = new mongoose.Schema({
 
 const staffSchema = new mongoose.Schema({
     rfid_tag: {
-        type: String,
-        unique: true,
-        default: null
+        type: String//,
+        //unique: true,
+        //default: null
     },
     employee_number: {
         type: String,
