@@ -120,7 +120,7 @@ export async function updateMyRequest(req, res) {
       });
     }
 
-    const { documents, purpose, contact_number, last_sem_attended, semester, total_amount } = req.body;
+    const { documents, purpose, contact_number, last_sem_attended, semester, total_amount, status } = req.body;
 
     const updateData = {};
 
@@ -138,6 +138,16 @@ export async function updateMyRequest(req, res) {
     if (last_sem_attended !== undefined) updateData.last_sem_attended = last_sem_attended;
     if (semester !== undefined) updateData.semester = semester;
     if (total_amount !== undefined && typeof total_amount === 'number') updateData.total_amount = total_amount;
+    if (status !== undefined) {
+        if (status === 'CANCELLED' && (request.status === 'FOR CLEARANCE' || request.status === 'FOR PAYMENT')) {
+            updateData.status = status;
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "You can only cancel requests in 'FOR CLEARANCE' or 'FOR PAYMENT' status."
+            })
+        }
+    }
 
     const updatedRequest = await RequestModel.findByIdAndUpdate(id, updateData, { new: true });
     res.status(200).json({
