@@ -61,8 +61,8 @@ const requestSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['PENDING (Clearance)', 'PENDING (Payment)', 'PREPARING', 'FOR PICKUP', 'CLAIMED'],
-        default: 'PENDING (Clearance)'
+        enum: ['FOR CLEARANCE', 'FOR PAYMENT', 'PROCESSING', 'FOR PICKUP', 'CLAIMED', 'CANCELLED', 'REJECTED'],
+        default: 'FOR CLEARANCE'
     },
     remarks: {
         type: String,
