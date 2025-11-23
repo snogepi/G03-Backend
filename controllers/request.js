@@ -2,6 +2,27 @@ import { RequestModel } from "../models/request.js";
 import { ClearanceModel } from "../models/clearance.js";
 import { createNotification } from "./notification.js";
 
+async function generateReferenceId() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); 
+    const day = String(now.getDate()).padStart(2, '0'); 
+    const dateStr = `${year}-${month}${day}`; 
+    
+    const lastRequest = await RequestModel.findOne({
+        reference_id: { $regex: `^${dateStr}-` }
+    }).sort({ reference_id: -1 }); 
+    let counter = 1; 
+    if (lastRequest) {
+        
+        const lastCounter = parseInt(lastRequest.reference_id.split('-')[2], 10);
+        counter = lastCounter + 1;
+    }
+   
+    const counterStr = String(counter).padStart(5, '0');
+    return `${dateStr}-${counterStr}`; 
+}
+
 // ---------------------------------
 // STUDENT
 // ---------------------------------
@@ -9,7 +30,6 @@ import { createNotification } from "./notification.js";
 // new req
 export async function createRequest(body) {
   try {
-    // Validate required fields based on the model
     if (
       !body.student_id ||
       !body.documents ||
@@ -25,12 +45,13 @@ export async function createRequest(body) {
       throw new Error("Missing or invalid required fields. Ensure documents is an array, and total_amount is a number.");
     }
 
-    // Additional validation for documents array (matches model structure)
     for (const doc of body.documents) {
       if (!doc.name || typeof doc.price !== 'number') {
         throw new Error("Each document must have a name and a numeric price.");
       }
     }
+
+    body.reference_id = await generateReferenceId();
 
     const request = new RequestModel(body);
     const saved = await request.save();

@@ -10,6 +10,11 @@ const requestSchema = new mongoose.Schema({
         ref: 'Student',
         required: true
     },
+    reference_id: {
+        type: String,
+        unique: true,
+        required: true
+    },
     documents: [
         {
             name: { type: String, required: true },
